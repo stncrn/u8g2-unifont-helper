@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+        <title>u8g2 Unifont helper</title>
+        <style type="text/css">
+            .popover {max-width:none;}
+            .popover-header {display:none;}
+            .popover-body {padding:0;}
+            .form-check{position: relative;margin-bottom: 4px;}
+            .form-check-label{margin-right:96px;}
+            .uni-preview {padding: 0 .5rem;font-weight: bolder;}
+            .bg-warning{margin-right:2px;}
+            .right-absolute{right:0;position:absolute;display:inline-block;bottom:0;}
+            img {image-rendering: pixelated;image-rendering: -moz-crisp-edges;image-rendering: crisp-edges;}
+            #uni-planes-bmp,#uni-planes-smp{columns:2;}
+            @media (max-width: 767.98px) {#uni-planes-bmp,#uni-planes-smp{columns:1;}}
+        </style>
+    </head>
+    <body class="bg-light">
+
+        
+
+        <div class="container">
+
+            <div class="row py-4">
+                <div class="col-12">
+                    <h1>u8g2 Unifont helper</h1>
+                </div>
+            </div>
+
+            <div class="row py-4">
+                <div class="card col-12 shadow px-0">
+                    <div class="card-body">
+                        <p>HOWTO and instructions are available on <a href="https://github.com/stncrn/u8g2-unifont-helper">Github</a>.</p>
+                        <p>Download the following files on your computer to generate custom font files:</p>
+                        <ul>
+                            <li>Full Unifont BDF file, including both BMP and SMP: <a href="./unifont-@@UNIFONT_VERSION@@.bdf">unifont-@@UNIFONT_VERSION@@.bdf</a></li>
+                            <li>Bdfconv (Linux version): <a href="./bdfconv">bdfconv</a></li>
+                            <li>Bdfconv (Windows version): <a href="./bdfconv.exe">bdfconv.exe</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row py-4">
+                <div class="col-12">
+                    <h3>Configuration</h3>
+                </div>
+                <div class="card col-12 shadow px-0">
+                    <div class="card-body">
+                        <form id="uni-form">
+                            <div class="mb-0">
+                                <h5>Preview size (hover on <button class="btn btn-primary uni-preview" disabled>i</button> below)</h5>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="uni-zoom" value="1" checked>
+                                    <label class="form-check-label">100%</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="uni-zoom" value="2">
+                                    <label class="form-check-label">200%</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="uni-zoom" value="3">
+                                    <label class="form-check-label">300%</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="uni-zoom" value="4">
+                                    <label class="form-check-label">400%</label>
+                                </div>
+                            </div>     
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row py-4">
+                <div class="col-12">
+                    <h3>Options</h3>
+                </div>
+                <div class="card col-12 shadow px-0">
+                    <div class="card-body">
+                        <form id="uni-form">
+                            <div class="mb-4">
+                                <h5>Input</h5>
+                                <input type="text" class="form-control" value="unifont-@@UNIFONT_VERSION@@.bdf" id="uni-input">
+                                <div class="form-text">Font filename</div>
+                            </div>
+                            <div class="mb-4">
+                                <h5>Character ranges</h5>
+                                <div class="row">
+                                    <div class="accordion" id="accPlanes">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accPlane0">
+                                                    Basic Multilingual Plane (BMP)
+                                                </button>
+                                            </h2>
+                                            <div id="accPlane0" class="accordion-collapse collapse shodw" data-bs-parent="#accPlanes">
+                                                <div class="accordion-body" id="uni-planes-bmp"></div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingTwo">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accPlane1">
+                                                    Supplementary Multilingual Plane (SMP)
+                                                </button>
+                                            </h2>
+                                            <div id="accPlane1" class="accordion-collapse collapse" data-bs-parent="#accPlanes">
+                                                <div class="accordion-body" id="uni-planes-smp"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                           
+                            </div>
+                            <div class="mb-4">
+                                <h5>Individual characters</h5>
+                                <textarea class="form-control" id="uni-indiv"></textarea>
+                                <div class="form-text">Paste text that you want to display</div>                           
+                                <div class="form-text">Examples: <a href="#" class="uni-example" data-indiv="一上世井人任伝何便倍加動包千合名君唄坂垂城墓大天女姫子宅安実家宿尋山岡崖嶌巻平度弓急恩恵愛成戦手昔時木本村束松林橋歌正洋海火狸猫田由界登矢神種空米紀約紅美耳良花葵藤街言記話誰谷豚賞返都野陽隠頃顕風颱魔">CJK unified for discogs.com/release/4957187</a></div>                           
+                            </div>
+                            <div class="mb-0">
+                                <h5>Output</h5>
+                                <input type="text" class="form-control" value="unifont_custom" id="uni-name">
+                                <div class="form-text">Generated font name</div>
+                                <input type="text" class="form-control mt-3" value="unifont_custom.c" id="uni-output">
+                                <div class="form-text">Generated font filename</div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row py-4">
+                <div class="col-12">
+                    <h3>Generated command</h3>
+                </div>
+                <div class="card col-12 shadow px-0">
+                    <div class="card-body">
+                        <pre class="mb-0"><code id="uni-cmd"></code></pre>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <small>Unicode planes: v@@UNICODE_VERSION@@ - Unifont: v@@UNIFONT_VERSION@@ - bdfconv: u8g2-@@U8G2_VERSION@@ [built @@DATE@@]</small>
+                </div>
+            </div>
+    
+ 
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/utf8/3.0.0/utf8.min.js" integrity="sha512-Up/VFqLmUsS5GMd4XTuxE6NsCsBJlPv12A9apHDqRx8v/x+++Qmmg2M1kTs8cQztxHk0d/rgAqmVOjzEKBZH7A==" crossorigin="anonymous"></script>
+        <script>
+            @@PLANES@@
+
+            function sort_unique(arr) {
+                if (arr.length === 0) return arr;
+                arr = arr.sort(function (a, b) { return a*1 - b*1; });
+                var ret = [arr[0]];
+                for (var i = 1; i < arr.length; i++) {
+                    if (arr[i-1] !== arr[i]) {
+                        ret.push(arr[i]);
+                    }
+                }
+                return ret;
+            }
+
+            function utf8ToCodePoints(bytes) {
+                var codePoints = [];
+                for (var i = 0; i < bytes.length; ) {
+                    var byte = bytes[i];
+                    if ((byte & bin("11110000")) == bin("11110000")) {
+                        var byte4 = bytes[i];
+                        var byte3 = bytes[i+1];
+                        var byte2 = bytes[i+2];
+                        var byte1 = bytes[i+3];
+                        var codePoint = ((byte4 & bin("00000111")) << 18) |
+                            ((byte3 & bin("00111111")) << 12) |
+                            ((byte2 & bin("00111111")) << 6) |
+                            (byte1 & bin("00111111"));
+                        i+=4;
+                    }
+                    else if ((byte & bin("11100000")) == bin("11100000")) {
+                        var byte3 = bytes[i];
+                        var byte2 = bytes[i+1];
+                        var byte1 = bytes[i+2];
+                        var codePoint = ((byte3 & bin("00001111")) << 12) |
+                            ((byte2 & bin("00111111")) << 6) |
+                            (byte1 & bin("00111111"));
+                        i+=3;
+                    }
+                    else if ((byte & bin("11000000")) == bin("11000000")) {
+                        var byte2 = bytes[i];
+                        var byte1 = bytes[i+1];
+                        var codePoint = ((byte2 & bin("00011111")) << 6) |
+                            (byte1 & bin("00111111"));                        
+                        i+=2;
+                    }
+                    else if ((byte & 0x80) == 0) {                        
+                        var codePoint = byte;          
+                        i+=1;
+                    }
+                    else {
+                        throw new Error("Unrecognized byte at position " + (i+1));
+                    }
+                    codePoints.push(codePoint);
+                }
+                return codePoints;
+            }
+
+            function bin(x) {
+                return parseInt(x,2);
+            }
+
+            function textToCodes(text){
+                var bytes = [];
+                var encoded = utf8.encode(text);
+                for (var i = 0; i < encoded.length; i++) {
+                    var byte = encoded[i].charCodeAt(0);
+                    bytes.push(byte);
+                }
+                var codePoints = utf8ToCodePoints(bytes);
+                var realCodePoints = [];
+                for (var i = 0; i < codePoints.length; i++) {
+                    realCodePoints.push(codePoints[i].toString(10)); 
+                }
+                return sort_unique(realCodePoints);
+            }
+
+            $().ready(function(){
+
+                // examples
+                $('.uni-example').click(function(){
+                    $('#uni-indiv').val($(this).data('indiv'));
+                    generateCmd();
+                    return false;
+                });
+
+                // populate planes
+                for (var name in planes){
+                    var range = planes[name].r.split('-');
+
+                    if(range[0] < 65536){
+                       var pl = '#uni-planes-bmp'; 
+                    }else{
+                       var pl = '#uni-planes-smp'; 
+                    }
+                    $(pl).append('<div class="form-check"><input class="form-check-input uni-char" type="checkbox"><label class="form-check-label">'+planes[name].t+' <div class="right-absolute"><span class="badge bg-warning">'+(range[1]-range[0]+1)+' chars</span><a class="btn btn-primary uni-preview" data-plane="'+name+'">i</a></div></label></div>');
+                }
+
+                // cancel submit, that mess with popovers
+                $("#uni-form").on("submit",function(event){event.preventDefault()});
+
+                // resize img
+                function setResizeImgEvent(){
+                    $('.uni-preview').unbind('shown.bs.popover').bind('shown.bs.popover', function () {
+                        // crappy hack, as size is still 0 when event is triggered...
+                        setTimeout(function(){
+                            $('img').height($('img').height() * $('input[name=uni-zoom]:checked').val());
+                        },10);
+                    });
+                }
+                
+                // init popovers
+                $('.uni-preview').popover({container:"body", animation:false, html: true,  trigger: 'hover', placement:'auto', content: function(){
+                    return('<img src="' + planes[this.dataset.plane].i + '"></img>');
+                }});
+               setResizeImgEvent();
+
+                // scale images on change
+                $('input[name=uni-zoom]').change(function(){
+                    setResizeImgEvent();
+                });
+
+                // gen command
+                function generateCmd(){
+                    var selectedPlanes = [];
+                    $('.uni-char').each(function(){
+                        if($(this).is(':checked')){
+                            selectedPlanes.push(planes[$(this).parent().find('.uni-preview').data('plane')].r);
+                        }
+                    });
+                    var uniqueCodes = textToCodes($('#uni-indiv').val()).join(',');
+                    if (uniqueCodes != ''){
+                        selectedPlanes.push(uniqueCodes);
+                    }
+                    $('#uni-cmd').text('bdfconv -v -f 1 -m "' + selectedPlanes.join(',') + '" ' + $('#uni-input').val() + ' -o ' + $('#uni-output').val() + ' -n ' + $('#uni-name').val() + ' -d ' + $('#uni-input').val());
+                }
+
+                // calculate command
+                $('.uni-char, #uni-name, #uni-input, #uni-output, #uni-indiv').change(function(){
+                    generateCmd();
+                });
+
+                generateCmd();
+            });
+        </script>
+    </body>
+</html>
+
